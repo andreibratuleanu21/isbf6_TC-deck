@@ -1,0 +1,326 @@
+import {
+  CodeSurfer,
+} from "code-surfer";
+import { nightOwl } from "@code-surfer/themes";
+import Prism from 'prism-react-renderer/prism';
+import dartLang from 'refractor/lang/dart';
+import src from './assets/logo.png';
+import ssrc from './assets/capture.jpg';
+dartLang(Prism);
+
+
+# Type checking
+<div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+}}>
+  <img src="https://bytex.net/wp-content/uploads/2019/04/bytex-small.png" width="200" />
+  <img src={src} width="400" />
+</div>
+
+### An It Should be Fun session `#5`
+
+---
+
+1. Some very basic theory.
+2. JavaScript Typing & Type Checking
+    1. How to do typing in JavaScript
+    2. How to do type checking in JS
+        1. What we check. JS Types.
+        2. When we check. Compile Time vs Run Time.
+        3. Why we check. Real-world use case.
+3. Live examples
+    1. The `typeof` operator
+    2. The `null` & `Array` dilema
+    3. The is Equal and is Equal Strict case
+    4. The `instanceof` operator
+    5. The use strict
+4. Bonus: Soft TypeScript your app.
+
+---
+
+# Type system
+
+A programming language should have a type system so that it can work with... data.
+
+[...] Is a set of rules that assigns a property called a type to the various constructs of a computer program, such as variables, expressions, functions or modules. <a href="https://en.wikipedia.org/wiki/Type_system">[1]</a>
+
+---
+
+Cool.
+
+# 2.1 But how do you "type" JavaScript?
+
+---
+
+## You don't
+
+---
+
+# 2.2 How to do typechecking in JS
+
+---
+
+## You don't
+
+<Steps>
+
+## Or do you?
+
+### By definition JS is dinamically typed meanning that it will try to infer / guess the type of your primitives.
+
+</Steps>
+
+---
+
+<CodeSurfer theme={nightOwl}>
+
+```cpp
+// Dart langunage. Dart is a static typed language
+
+class CarMaker {
+  bool isActive;
+  int numberOfCarsProduced;
+  double lastYearProfit
+  String brandName;
+  Date dateFounded;
+  List<String> models;
+  Map<String, CarBlueprint> _privateInvetory;
+
+  CarMaker(this.brandName);
+}
+
+// Also types can't be canged.
+int variable = 0;
+variable = "Hello World!";
+// ERROR A value of type 'String' can't be assigned to a variable of type 'int';
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer theme={nightOwl}>
+
+```js
+
+let numberA = 1;
+// we assign a number 
+let numberB = '1';
+// we assign a string
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer theme={nightOwl}>
+
+```js
+
+let numberA = 1;
+// we assign a number 
+let numberB = '1';
+// we assign a string
+
+numberA = 'Hello world!'
+// ok, no problem
+// numberA is now string
+// because, well...
+// It's holding a String value!
+
+```
+
+</CodeSurfer>
+
+---
+
+Basically JS is dynamic because each time we assign something to a variable, that variable will get the type of that something.
+
+
+
+So we’re talking about types. What types do we have in JS?
+
+---
+
+(see session #1. Or serach on MDN.)
+
+Primitives
+- `string`
+- `number`
+- `bigint`
+- `boolean`
+- `null`
+- `undefined`
+- `symbol`
+
+---
+
+...And Objects.
+
+Like Arrays or Date or Error
+
+---
+
+<CodeSurfer theme={nightOwl}>
+
+```js
+
+class Car {
+  constructor(model, maker) {
+    this.model = model;
+    this.maker = maker;
+  }
+}
+  
+class Dacia extends Car {
+  constructor(model, maker, isTaxi) {
+    super(model, maker);
+    this.isTaxi = isTaxi;
+  }
+}
+
+const Taxi = new Dacia('logan', 'dacia', true);
+
+console.log(Taxi);
+// Dacia
+// {model: 'logan', maker: 'dacia', isTaxi: true}
+
+```
+
+</CodeSurfer>
+
+---
+
+So we know what we'll need to check. Primitives & Objects.
+
+---
+
+# When do we check types?
+
+- At Compile time (wha.. what?)
+- At Run time
+
+---
+
+Js is a dynamically typed scripting language that, in case of modern browsers (all of the modern ones) runs on a JIT (just in time) compiler. [3]
+
+Basically each time you change the code, the compiler *dynamically* checks and changes all variable data types for you.
+
+Note this is my own definition here. Might not be accurate.
+
+---
+
+But you could just force a static type check so that we'll make sure that our variables will always stay the same when we compile our code.
+
+Because we can.
+
+Because TypeScript
+
+(more on TS later)
+
+---
+
+Anyway, in JS, most of the type checking is done at Run time either by us, or by the compiler.
+
+---
+
+# So why do we need to check types?
+
+---
+
+## There are some scenarios where is handy:
+
+1. Would be when we build our own library and we want to make sure we receive what we need.
+
+Imagine we built React.
+
+---
+
+<CodeSurfer theme={nightOwl}>
+
+```js
+ReactDOM.render(
+  <h1>Hello, world!</h1>,
+  document.getElementById('root')
+);
+
+class ReactDOMClass {
+  ...
+
+  /** render method mounts the first argument 
+    * into the element received
+    * at the second parameter
+    * @param child ReactNode
+    * @param parent Element
+    **/
+  render(child, parent) {
+    // check if parent is a Dom Element.
+    // Throw an error describing that parent
+    // should be a instance of Element
+    ...
+  }
+  ...
+}
+```
+
+</CodeSurfer>
+
+---
+
+But we ar not building React :(
+
+Instead we are working with Backend teams.
+
+So, 2. We want to make sure that we receive what we need.
+
+Oh...
+
+---
+
+Back to the backend.
+
+GET /invoiceAfterDiscount.
+
+Swagger model:
+
+`{ data, totalWithoutDiscount: 134.54, discountPercent: 34 }`
+
+Actual data:
+
+`{ data, totalWithoutDiscount: 134.54, discountPercent: “34%” }`
+
+---
+
+## Result:
+
+<img src={ssrc} width="900" />
+
+---
+
+### So how do we check our Types?
+
+---
+
+### 1. `typeof` operator
+
+---
+
+<CodeSurfer theme={nightOwl}>
+
+```js
+function calculateTotal(totalWithoutDiscount, discount) {
+  if (typeof discount !== 'number') {
+    console.warn('Discount argument should be number');
+    return totalWithoutDiscount;
+  }
+  ...
+}
+```
+
+</CodeSurfer>
+
+---
